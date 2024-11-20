@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+	echo "Please run this script as root user"
+	exit 1
+fi
+
+#Creating a new system user moving a new yser to a new home directory
+useradd --system -s /usr/bin/nologin webgen -d /var/lib/webegen
+
+#Moving the new system user to a diffrent directory
+#usermod -d /var/lib/webgen webgen
+
+#Creating new directories
+mkdir -p /var/lib/webgen/bin
+mkdir -p /var/lib/webgen/HTML
+
+#Creting new files
+touch /var/lib/webgen/HTML/index.html
+touch /var/lib/webgen/bin/generate_index
+
+
+#Chaning persmission on the newly created files
+chmod +x index.html
+chmod +x generate_index
+
+#Changing the ownership 
+chown -R webgen:webgen /var/lib/webgen
+
+
+
+
+
+	
+
