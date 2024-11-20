@@ -1,0 +1,11 @@
+[Unit]
+Description=generate-index html
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=webgen
+Group=webgen
+ExecStart=/var/lib/webgen/bin
+Restart=on-failure
+
