@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 User=webgen
 Group=webgen
-ExecStart=/var/lib/webgen/bin
+ExecStart=/var/lib/webgen/bin/generate-index
 RemainAfterExit=yes
 Restart=on-failure
 

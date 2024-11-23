@@ -13,6 +13,9 @@ ANother issues was that my nginx file thorwing the erro and I had to increase my
 
 MY issue was that my creatin generate-index.service was failing, I had to debug this by adding a ReaminAfterExit=yes directive to let the system to keep the service active nad restart on  failure is that the serice will restart if it fails
 
+
+#Ip tables filter issue
+#refernecne https://bbs.archlinux.org/viewtopic.php?pid=1333991#p1333991
 # Reference
   
   #Use the section 3.2.3.1 to setup your server block
