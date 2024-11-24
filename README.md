@@ -2,14 +2,10 @@
 
 
 
+Requirments for this tutorial
 
-Bash scripting: Automating tasks and generating dynamic content.
-System administration: Managing users, permissions, and services.
-Systemd services and timers: Scheduling tasks using systemd.
-Nginx configuration: Hosting web content and managing server blocks.
-Firewall setup: Securing your server using UFW.
-This project builds on concepts discussed in class and requires applying your understanding of system administration, systemd, scripting, and web server configuration.
-
+1. Arch linux droplet
+2. Text editor (nvim, vim, nano)
 
 
 ## Step 1
@@ -23,11 +19,14 @@ Run the following command:
 
     `sudo ./user `
 
+
+Copy the content from the file to your `generate-index` file from this repository `generate-index` file.
+
 ## Step 2
 
-### Generate Index Service and Timer
+### Generate Index service and timer
 
-In Step 2 you have to create a generate-index.service and generate-index.timer 
+In Step 2 you have to create and cofigure `generate-index.service` and `generate-index.timer` 
 
 1. `generate-index.service` will run your generate-index file.
  
@@ -35,6 +34,13 @@ In Step 2 you have to create a generate-index.service and generate-index.timer
 
     /etc/systemd/system/
 
+Create the file by running the command below.
+
+    sudo nvim /etc/systemd/system/generate-index.service
+
+Change permissions on your newly created file.
+
+    sudo chmod +x generate-index.service
 
 You need to configure your `generate-index.service`
 
@@ -56,6 +62,34 @@ Copy the code below into your `generate-index.service` file.
       [Install]
       WantedBy=multi-user.target 
 
+2. `generate-index.timer` will start your service every day at 05:00
+
+`generate-index.timer` needs to be created at the location below
+
+    /etc/systemd/system/
+
+Create the file by running the command below.
+
+    sudo nvim /etc/systemd/system/generate-index.timer
+
+Change permissions on your newly created file.
+
+    sudo chmod +x generate-index.timer
+
+
+You need to configure your `generate-index.timer`
+
+Copy the code below to you `generate-index.timer` file.
+
+    [Unit]
+    Description=Timer for generate-index.service
+
+    [Timer]
+    OnCalendar=*-*-* 05:00:00
+    Persistent=True
+
+    [Install]
+    WantedBy=timers.target
 
 Run the follwoing commands to start and enable the services:
 
@@ -70,127 +104,236 @@ Check the status of your services by running the commands below:
     sudo systemctl status generate-index.timer
     sudo systemctl status generate-index.service
 
+
+   
+If everything went well, your output when running the status for `generate-index.service` should look similar to the image below
+
+![Service Status](/2420_Assignment_3_Part_1/assets/services_image.png "Status running")
+
+
+
+In the case that your services are not starting run the command below to reload the services. 
+Also if you are making any changes to your service files. run the command below. 
       
-Your output when running the status for `generate-index.service` should look similar to the image below
+      sudo systemctl daemon-reload
 
-![Service Status](2420_Assignment_3_Part_1/assets/services image.png "Status running")
+After running this command run the start / enable command services again.
 
-
-This file needs to be located in the location below
-`generate-index.timer` will start your service every day at 05:00
-    
-
-
-
-
-
-#### 2. `generate-index.timer`
-The timer file schedules the service to execute every day at 05:00.
-
-
-
-
-
-Reload systemd and enable the timer: Run the following commands to reload systemd, enable, and start the timer:
-
-bash
-
-sudo systemctl daemon-reload
-
-
-
-
-chmod +x /path/to/generate_index
 
 # Step 3
 
 
-## Configure Nginx
+## Install and configurw nginx
 
-### Steps:
-1. **Modify the Main `nginx.conf` File**:
-   - `nginx.conf` needs to be updated file in order the Nginx server runs as the `webgen` user.
-   - Find the `user` directive in `/etc/nginx/nginx.conf` and and at the top of the file change it to:
-     ```nginx
-     user webgen;
-     ```
+1. **Install nginx**
+
+Run the command below to update your Arch linux distirbution, you want to have most recent version.
+
+    sudo pacman -Syu
+
+Run the command below to install the nginx package
+
+    sudo pacman --S nginx
+
+
+
+2. **Modify the Main `nginx.conf` File**:
+
+Update the `nginx.conf` file, so nginx server runs as the `webgen` user.
+
+At the top of the `nginx.conf` file write the following statement 
+     
+          user webgen;
+     
+
+Save the file and exit. 
+Do not make any other changes to the `nginx.conf`.
 
 2. **Create a Separate Server Block File**:
-   - Avoid modifying the main `nginx.conf` file directly for server-specific configurations.
-   - Create a new server block file in `/etc/nginx/sites-available/` (or the appropriate directory based on your setup, e.g., `/etc/nginx/conf.d/` on Arch Linux). Example:
-     ```nginx
-     server {
-         listen 80;
-         server_name localhost;
 
-         location / {
-             root /path/to/your/html/files;
-             index index.html;
-         }
-     }
-     ```
-   - Symlink the server block file to `/etc/nginx/sites-enabled/` if needed:
-     ```bash
-     sudo ln -s /etc/nginx/sites-available/your-server-block.conf /etc/nginx/sites-enabled/
-     ```
+We will create a separete server block file.
 
-3. **Why Use Separate Server Block Files?**
-   - Easier management: Each domain or configuration is isolated.
-   - Prevents accidental overwrites of the main configuration file.
-   - Simplifies debugging and future scalability.
+We need to create twop new directories.
 
-4. **Verify Nginx Configuration and Status**:
-   - Check the Nginx configuration syntax:
-     ```bash
+The new directories needas to be created in the directory below,
+
+    cd /etc/nginx
+
+Create two new directories by running the command below.
+
+    sudo mkdir -p /etc/nginx/sites-available
+    sudo mkdir -p /etc/nginx/sites-enabled
+
+
+Create a new server block file in `/etc/nginx/sites-available/`
+
+Create a new the file called `webgen.conf`.
+
+Change permissions on your newly created file.
+
+    sudo chmod +x `webgen.conf`
+
+Copy the code below
+     
+   
+    server {
+    
+          listen 80;
+
+          server_name <your droplet ip address>;
+
+          root /var/lib/webgen/HTML
+          index index.html;cat 
+
+          location / {
+            try_files $uri $uri/ =404;
+    }
+
+Save and exit the file.
+
+Append include sites-enabled/*; to the end of the http block in the `nginx.conf` file:
+
+/etc/nginx/nginx.conf
+http {
+    ...
+    include /etc/nginx/sites-enabled/*;
+}
+
+Save the `nginx.conf` file and exit, do not change anything else.
+
+}
+     
+To enable a site, create a symlink byt running the command below:
+
+    ln -s /etc/nginx/sites-available/webgen.conf /etc/nginx/sites-enabled/webgen.conf
+
+
+
+4. **Troubleshoot nginx configuration**:
+
+  Check the `nginx.conf` file for any syntax errors:
+
+Run the command below:
+     
      sudo nginx -t
-     ```
-   - Reload or restart the Nginx service:
-     ```bash
-     sudo systemctl reload nginx
-     sudo systemctl restart nginx
-     ```
-   - Check the service status:
-     ```bash
-     sudo systemctl status nginx
-     ```
+     
+Run the command below to start and enable nginx services
 
----
+    sudo systemctl daemon-relaod 
+    sudo systemctl start nginx.service
+    sudo systemctl enable nginx.service  
 
-## Task 4: Firewall Configuration with `ufw`
+## Step 4:
 
-### Steps:
+### Configure uncomplicated Firewall(ufw)
+
 1. **Install and Configure UFW**:
-   - Install `ufw` (Uncomplicated Firewall):
-     ```bash
-     sudo pacman -S ufw
-     ```
-   - Allow SSH and HTTP traffic:
-     ```bash
-     sudo ufw allow
+
+Run the command below to update your Arch linux distirbution, you want to have most recent version.
+
+    sudo pacman -Syu
+
+Run the command below to install the nginx package
+
+    sudo pacman -S ufw
+
+Run the command below to enable and start the service.
+
+    sudo systemctl enable --now ufw.service
+
+Run the command below to check the status of ufw with the command
+
+    sudo ufw status verbose
+
+It should return inactive if you have just installed ufw for the first time.
+
+You want to allow ssh connection to your server
+Run any of the commands below to allow ssh from anywhere.
+
+    sudo ufw allow ssh
+    sudo ufw allow 22 # designated ssh port
+
+You want to limit ssh connections. This will deny an incoming address if they attempt 6 initiations in 30 seconds.
+
+    sudo ufw limit ssh
+
+You need to allow `hhtp` for you web server.
+Run the command below.
+
+    sudo ufw allow http
+
+After defining the rules for your firewall, turn on your firewall by running the command below
+**Do not run this command before applying rules to your firewall, esspecillay for ssh**
+
+    sudo ufw enable
+
+Check the status again, to confirm that everything is working.
+
+    sudo ufw status verbose
+
+Your output should look something similar to the below.
+
+![ufw](/2420_Assignment_3_Part_1/assets/ports.png "ufw")
+
+# Step 5
+
+Test your web server by entering your ip addres into your browser
+
+Your output should be similar to the image below
+
+Troubleshoot and possible issues
 
 
 
-useradd -m /var/lib/webgen/bin/HTML login_shell webgen# 2420_Assignment_3_Part_1
+Issue 1: Apache Conflicts with nginx
+When setting up nginx, I ran into a problem where Apache server was running on my system was using port 80. 
+This caused a conflict because nginx also needed port 80.
+Solution to this situation is to stop all apache servers and disabled them so that port 80 is free for nginx.
+
+To figure out which processes were using port 80, I installed the `lsof` tool. 
+This tool showed me all the running services and their port usage.
+
+Run the command below to stop and after disable the apache server or some other server
+
+    sudo systemctl stop httpd
+
+    sudo systemctl disable httpd
 
 
-First issue that I have encouter that my previous apache server that we used in previous classes was running actually I had 5 apache servers runnig, and my port 80 was in use I could not access it
-I had first to stop the apache server and the disable it in porder to make space nginx to run on port 80
 
-I also installe dthe lsof package to my drolet in order to see all teh servers runnign, this package was quite usefull as detailed all teh servers running, and to check which ports are open as my port 80 was conflicting with nginx and that was teh reason why the nginx did not run
+Run the command below to check that apache is no logner using the port 80.
 
-My second issue was that my server block was asking me for a certificate, while I was following the arch wiki tutorial for creating a seperate server block file, teh example has ssl addition on the port syntax, after oding some research I have removed this adn the server was running smothley
-
-ANother issues was that my nginx file thorwing the erro and I had to increase my Nginx Setting server_names_hash_max_size and server_names_hash_bucket_size the message in journactl was indicating to increase to 2048 and 128 from 64 nad 1024 respectivly. After handling all of these erros my server was running proprely. 
-
-MY issue was that my creatin generate-index.service was failing, I had to debug this by adding a ReaminAfterExit=yes directive to let the system to keep the service active nad restart on  failure is that the serice will restart if it fails
+    lsof -i :80
 
 
-#Ip tables filter issue
-#refernecne https://bbs.archlinux.org/viewtopic.php?pid=1333991#p1333991
+Issue 2: iptables  Error
+While trying to set up UFW (Uncomplicated Firewall), I got this warning:
+iptables v1.8.10 (legacy): can't initialize iptables table 'filter': Table does not exist (do you need to insmod?).
+
+The problem was caused by an outdated kernel or missing modules needed for iptables. I also found that the iptables.service was inactive. To fix this, I updated my Arch Linux server and rebooted it. After the update and reboot, iptables was working, and I was able to configure UFW without any issues
+
+To update the arch server run the command below.
+
+    sudo pacman -Syu
+
+To reboot you server run teh command below
+
+    sudo systemctl reboot
+
+
+
 # Reference
   
-  #Use the section 3.2.3.1 to setup your server block
-  1. https://wiki.archlinux.org/title/Nginx 3.2.3.1 
+  
+  1. `nginx` https://wiki.archlinux.org/title/Nginx 3.2.3.1 
 
-  #lsof
+  2. `lsof`
   https://www.liquidweb.com/blog/how-to-locate-open-ports-in-linux/#:~:text=The%20six%20primary%20methods%20for,re%20correctly%20configured%20and%20secure.
+
+  3. `ufw`
+  https://wiki.archlinux.org/title/Uncomplicated_Firewall
+
+  4. `timer`
+  https://wiki.archlinux.org/title/Systemd/Timers
+
+
