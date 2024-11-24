@@ -11,7 +11,7 @@ Requirments for this tutorial
 ## Step 1
 
 Run the user script
-The user sctipr will create all the nessecsary base directories and files for the new `webgen` user. 
+The `user` script will create all the nessecsary base directories and files for the new `webgen` user. 
 
 **Please note that you have to have root privilages in order to tun the user script**
 
@@ -26,7 +26,7 @@ Copy the content from the file to your `generate-index` file from this repositor
 
 ### Generate Index service and timer
 
-In Step 2 you have to create and cofigure `generate-index.service` and `generate-index.timer` 
+In Step 2 you have to create and configure `generate-index.service` and `generate-index.timer` 
 
 1. `generate-index.service` will run your generate-index file.
  
@@ -93,11 +93,11 @@ Copy the code below to you `generate-index.timer` file.
 
 Run the follwoing commands to start and enable the services:
 
-      sudo systemctl start generate-index.service
-      sudo systemctl enable generate-index.service
+    sudo systemctl start generate-index.service
+    sudo systemctl enable generate-index.service
 
-      sudo systemctl start generate-index.timer
-      sudo systemctl enable generate-index.timer
+    sudo systemctl start generate-index.timer
+    sudo systemctl enable generate-index.timer
 
 Check the status of your services by running the commands below:
 
@@ -115,15 +115,15 @@ If everything went well, your output when running the status for `generate-index
 In the case that your services are not starting run the command below to reload the services. 
 Also if you are making any changes to your service files. run the command below. 
       
-      sudo systemctl daemon-reload
+    sudo systemctl daemon-reload
 
 After running this command run the start / enable command services again.
 
 
-# Step 3
+## Step 3
 
 
-## Install and configurw nginx
+### Install and configurw nginx
 
 1. **Install nginx**
 
@@ -143,7 +143,7 @@ Update the `nginx.conf` file, so nginx server runs as the `webgen` user.
 
 At the top of the `nginx.conf` file write the following statement 
      
-          user webgen;
+     user webgen;
      
 
 Save the file and exit. 
@@ -153,9 +153,9 @@ Do not make any other changes to the `nginx.conf`.
 
 We will create a separete server block file.
 
-We need to create twop new directories.
+We need to create two new directories.
 
-The new directories needas to be created in the directory below,
+The new directories need to be created in the directory below.
 
     cd /etc/nginx
 
@@ -203,7 +203,7 @@ Save the `nginx.conf` file and exit, do not change anything else.
 
 }
      
-To enable a site, create a symlink byt running the command below:
+To enable a site, create a symlink by running the command below:
 
     ln -s /etc/nginx/sites-available/webgen.conf /etc/nginx/sites-enabled/webgen.conf
 
@@ -223,13 +223,14 @@ Run the command below to start and enable nginx services
     sudo systemctl start nginx.service
     sudo systemctl enable nginx.service  
 
-Test your web page by runnig your ip in your broswer.
+Test your web page by typing your ip address in your broswer.
 Your output should look similar to the below.
 
 ![ufw](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/It%20Works.png)
-## Step 4:
 
-### Configure uncomplicated Firewall(ufw)
+### Step 4:
+
+## Configure uncomplicated Firewall(ufw)
 
 1. **Install and Configure UFW**:
 
@@ -261,12 +262,13 @@ You want to limit ssh connections. This will deny an incoming address if they at
 
     sudo ufw limit ssh
 
-You need to allow `hhtp` for you web server.
+You need to allow `http` for you web server.
 Run the command below.
 
     sudo ufw allow http
 
 After defining the rules for your firewall, turn on your firewall by running the command below
+
 **Do not run this command before applying rules to your firewall, esspecillay for ssh**
 
     sudo ufw enable
@@ -277,16 +279,17 @@ Check the status again, to confirm that everything is working.
 
 Your output should look something similar to the below.
 
-![ufw](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/ports.png"ufw")
+![ports](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/ports.png)
 
-# Step 5
+### Step 5
 
 Test your web server by entering your ip addres into your browser
 
 Your output should be similar to the image below
 
-Troubleshoot and possible issues
+![It works](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/It%20Works.png)
 
+Troubleshoot and possible issues
 
 
 Issue 1: Apache Conflicts with nginx
