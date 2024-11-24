@@ -17,7 +17,7 @@ The user sctipr will create all the nessecsary base directories and files for th
 
 Run the following command:
 
-    `sudo ./user `
+    sudo ./user 
 
 
 Copy the content from the file to your `generate-index` file from this repository `generate-index` file.
@@ -108,7 +108,7 @@ Check the status of your services by running the commands below:
    
 If everything went well, your output when running the status for `generate-index.service` should look similar to the image below
 
-![Service Status](/2420_Assignment_3_Part_1/assets/services_image.png "Status running")
+![Service Status](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/services_image.png "Status running")
 
 
 
@@ -223,6 +223,10 @@ Run the command below to start and enable nginx services
     sudo systemctl start nginx.service
     sudo systemctl enable nginx.service  
 
+Test your web page by runnig your ip in your broswer.
+Your output should look similar to the below.
+
+![ufw](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/It%20Works.png)
 ## Step 4:
 
 ### Configure uncomplicated Firewall(ufw)
@@ -273,7 +277,7 @@ Check the status again, to confirm that everything is working.
 
 Your output should look something similar to the below.
 
-![ufw](/2420_Assignment_3_Part_1/assets/ports.png "ufw")
+![ufw](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/ports.png"ufw")
 
 # Step 5
 
