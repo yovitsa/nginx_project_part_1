@@ -1,8 +1,8 @@
 # 2420 Assignment 3 - Part 1
 
+This is step-by-step process to set up a web server using Arch Linux.
 
-
-Requirments for this tutorial
+Requirments:
 
 1. Arch linux droplet
 2. Text editor (nvim, vim, nano)
@@ -289,7 +289,7 @@ Your output should be similar to the image below
 
 ![It works](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/It%20Works.png)
 
-Troubleshoot and possible issues
+## Troubleshoot and possible issues
 
 
 Issue 1: Apache Conflicts with nginx
