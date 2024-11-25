@@ -2,7 +2,7 @@
 
 This is step-by-step process to set up a web server using Arch Linux.
 
-Requirments:
+Requirements:
 
 1. Arch linux droplet
 2. Text editor (nvim, vim, nano)
@@ -11,9 +11,9 @@ Requirments:
 ## Step 1
 
 Run the user script
-The `user` script will create all the nessecsary base directories and files for the new `webgen` user. 
+The `user` script will create all the necessary base directories and files for the new `webgen` user. 
 
-**Please note that you have to have root privilages in order to tun the user script**
+**Please note that you have to have root privileges in order to run the user script**
 
 Run the following command:
 
@@ -91,7 +91,7 @@ Copy the code below to you `generate-index.timer` file.
     [Install]
     WantedBy=timers.target
 
-Run the follwoing commands to start and enable the services:
+Run the following commands to start and enable the services:
 
     sudo systemctl start generate-index.service
     sudo systemctl enable generate-index.service
@@ -123,11 +123,11 @@ After running this command run the start / enable command services again.
 ## Step 3
 
 
-### Install and configurw nginx
+### Install and configure  nginx
 
 1. **Install nginx**
 
-Run the command below to update your Arch linux distirbution, you want to have most recent version.
+Run the command below to update your Arch linux distribution, you want to have most recent version.
 
     sudo pacman -Syu
 
@@ -151,7 +151,7 @@ Do not make any other changes to the `nginx.conf`.
 
 2. **Create a Separate Server Block File**:
 
-We will create a separete server block file.
+We will create a separate server block file.
 
 We need to create two new directories.
 
@@ -219,11 +219,11 @@ Run the command below:
      
 Run the command below to start and enable nginx services
 
-    sudo systemctl daemon-relaod 
+    sudo systemctl daemon-reload
     sudo systemctl start nginx.service
     sudo systemctl enable nginx.service  
 
-Test your web page by typing your ip address in your broswer.
+Test your web page by typing your ip address in your browser.
 Your output should look similar to the below.
 
 ![ufw](https://github.com/yovitsa/2420_Assignment_3_Part_1/blob/main/assets/It%20Works.png)
@@ -269,7 +269,7 @@ Run the command below.
 
 After defining the rules for your firewall, turn on your firewall by running the command below
 
-**Do not run this command before applying rules to your firewall, esspecillay for ssh**
+**Do not run this command before applying rules to your firewall, especially for ssh**
 
     sudo ufw enable
 
@@ -308,7 +308,7 @@ Run the command below to stop and after disable the apache server or some other 
 
 
 
-Run the command below to check that apache is no logner using the port 80.
+Run the command below to check that apache is no longer using the port 80.
 
     lsof -i :80
 
@@ -323,7 +323,7 @@ To update the arch server run the command below.
 
     sudo pacman -Syu
 
-To reboot you server run teh command below
+To reboot you server run the command below
 
     sudo systemctl reboot
 
