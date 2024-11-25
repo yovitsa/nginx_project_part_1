@@ -179,6 +179,7 @@ Copy the code below
     server {
     
           listen 80;
+          listen [::]:80;
 
           server_name <your droplet ip address>;
 
