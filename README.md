@@ -1,4 +1,4 @@
-# 2420 Assignment 3 - Part 1
+# 2420 - Part 1
 
 This is step-by-step process to set up a web server using Arch Linux.
 
